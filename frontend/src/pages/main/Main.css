@@ -1,0 +1,18 @@
+.collectionCard , .card{
+   display: grid;
+    grid-template-columns: repeat(3, auto); 
+    grid-template-rows: repeat(3, auto);
+    justify-content: center;
+    margin: 0px auto;
+}
+.card {
+  margin: 30px;
+}
+.loadingSpinner {
+  position: relative;
+  z-index: 9999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
