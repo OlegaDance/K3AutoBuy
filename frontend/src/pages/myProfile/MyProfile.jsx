@@ -40,7 +40,7 @@ const LoadingSpinner = () => (
 )
 
 	const [cars, setCars] = useState([])
-	const [loading, setLoading] = useState(true) // Стан для відстеження завантаження
+	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
 		const fetchCars = async () => {
@@ -50,7 +50,7 @@ const LoadingSpinner = () => (
 					car => car.phone_owner === infoUser.number
 				)
 				setCars(carsMatchingUser)
-				setLoading(false) // Після завершення завантаження даних встановлюємо loading в false
+				setLoading(false) 
 			} catch (error) {
 				console.error('Помилка при отриманні списку машин:', error)
 			}

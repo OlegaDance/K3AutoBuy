@@ -14,12 +14,12 @@ function Profile() {
 			<div className={styles.root}>
 				<div className={styles.avatarAcc}>
 					<img src={avatarProfiveIcon} alt='avatar' />
+					<button >Додати фото</button>
 				</div>
 				<div className={styles.infoUser}>
 					<p>Ім'я: {infoUser.name}</p>
 					<p>Пошта: {infoUser.email}</p>
 					<p>Номер Телефону: {infoUser.number}</p>
-					<p>Адреса: {infoUser.adress}</p>
 				</div>
 				<div className={styles.soldInfo}>
 					<p>Виставлені цим продавцем</p>

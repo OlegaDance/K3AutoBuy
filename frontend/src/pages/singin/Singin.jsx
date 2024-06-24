@@ -17,29 +17,48 @@ function Singin() {
 		setIsRightPanelActive(prevState => !prevState)
 	}
 
-const singUp = async e => {
-	e.preventDefault()
-	try {
-		const response = await axios.post(
-			'http://localhost:8000/api/register',
-			{
-				name: name,
-				email: email,
-				number: number,
-				password: password,
-			},
-			{
-				headers: {
-					'Content-Type': 'application/json', // Додаємо заголовок Content-Type
-				},
-			}
-		)
-		localStorage.setItem('user-info', JSON.stringify(response.data))
-		navigate('/')
-	} catch (error) {
-		console.error('error!', error)
+	const validate = () => {
+		const newErrors = []
+		if (!name) newErrors.push("Ім'я є обов'язковим")
+		if (!email) newErrors.push("Пошта є обов'язковою")
+		else if (!/\S+@\S+\.\S+/.test(email)) newErrors.push('Некоректна пошта')
+		if (!password) newErrors.push("Пароль є обов'язковим")
+		else if (password.length < 2)
+			newErrors.push('Пароль має бути не менше 6 символів')
+		if (!number) newErrors.push("Номер телефона є обов'язковим")
+		else if (!/^\d+$/.test(number)) newErrors.push('Некоректний номер телефона')
+		return newErrors
 	}
-}
+
+	const singUp = async e => {
+		e.preventDefault()
+		const validationErrors = validate()
+		if (validationErrors.length > 0) {
+			alert(validationErrors.join('\n'))
+			return
+		}
+		try {
+			const response = await axios.post(
+				'http://localhost:8000/api/register',
+				{
+					name: name,
+					email: email,
+					number: number,
+					password: password,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}
+			)
+			localStorage.setItem('user-info', JSON.stringify(response.data))
+			navigate('/')
+		} catch (error) {
+			console.error('error!', error)
+			alert('Виникла помилка при реєстрації. Спробуйте ще раз.')
+		}
+	}
 
 	return (
 		<>

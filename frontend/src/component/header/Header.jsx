@@ -4,29 +4,61 @@ import { Link } from 'react-router-dom'
 import logo from '../../assets/image/logo.png'
 import NewMessage from '../../assets/svg/NewMessage'
 import { useNavigate } from 'react-router-dom'
+import ModalMessage from '../modalMessage/ModalMessage'
+import axios from 'axios'
 
 function Header({ onLogin }) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isModalOpen, setIsModalOpen] = useState(false) 
+	const [message, setMessage] = useState('') 
 	const navigate = useNavigate()
 
 	useEffect(() => {
 		const storedUserInfo = localStorage.getItem('user-info')
 		setIsLoggedIn(!!storedUserInfo)
 
-		// Оновлюємо стан кожні 60 секунд
 		const interval = setInterval(() => {
 			const storedUserInfo = localStorage.getItem('user-info')
 			setIsLoggedIn(!!storedUserInfo)
-		}, 500) // Оновлюємо кожні 60 секунд
+		}, 500)
 
-		return () => clearInterval(interval) // Прибираємо інтервал при знищенні компонента
+		return () => clearInterval(interval)
 	}, [])
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			const fetchNotifications = async () => {
+				try {
+					const response = await axios.get(
+						'http://127.0.0.1:8000/api/notifications'
+					)
+					if (response.data && response.data.message) {
+						setMessage(response.data.message)
+						setIsModalOpen(true)
+					}
+				} catch (error) {
+					console.error('Помилка при отриманні повідомлень:', error)
+				}
+			}
+
+			fetchNotifications()
+		}
+	}, [isLoggedIn])
 
 	const handleLogout = () => {
 		localStorage.removeItem('user-info')
 		setIsLoggedIn(false)
 		navigate('/')
-		onLogin(false) // Оновлюємо стан у батьківському компоненті
+		onLogin(false)
+	}
+
+	const openModal = () => {
+		setIsModalOpen(true)
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false)
+		setMessage('')
 	}
 
 	return (
@@ -47,7 +79,7 @@ function Header({ onLogin }) {
 				</Link>
 			</nav>
 			<div className='headerBtn'>
-				<NewMessage />
+				<NewMessage onClick={openModal} />
 				<Link to={'./addCarPage'}>
 					<button className='btnAddCar'>Додати авто</button>
 				</Link>
@@ -61,6 +93,11 @@ function Header({ onLogin }) {
 					</Link>
 				)}
 			</div>
+			<ModalMessage
+				isOpen={isModalOpen}
+				onClose={closeModal}
+				message={message}
+			/>{' '}
 		</div>
 	)
 }
