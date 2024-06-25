@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function sendMessage(Request $request)
     {
-        // Validate that the sender and receiver IDs are different
+        
         if ($request->input('sender_id') == $request->input('receiver_id')) {
             return response()->json(['error' => 'You cannot send a message to yourself.'], 400);
         }
@@ -152,5 +152,4 @@ public function getMessages($senderId, $receiverId, $carId)
             return response()->json(['error' => 'User not found'], 404);
         }
     }
-   
 }

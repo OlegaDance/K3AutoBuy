@@ -3,6 +3,7 @@ import axios from 'axios'
 import styles from './AdminMain.module.scss'
 import ItemBlockAdmin from '../../component/itemBlockAdmin/ItemBlockAdmin'
 import ModalWindowAdmin from '../../component/modalWindowAdmin/ModalWindowAdmin'
+import { useNavigate } from 'react-router-dom'
 
 function AdminMain() {
 	const [isModalOpen, setModalOpen] = useState(false)
@@ -34,6 +35,20 @@ function AdminMain() {
 		price: '',
 		photo_paths: '',
 	})
+
+	const [isAdmin, setIsAdmin] = useState(false)
+	const navigate = useNavigate()
+
+	const user = localStorage.getItem('user-info')
+	const infoUser = JSON.parse(user)
+
+	useEffect(() => {
+		if (infoUser.is_admin) {
+			setIsAdmin(true)
+		} else {
+			navigate('/')
+		}
+	}, [navigate])
 
 	const openModal = car => {
 		setSelectedCar(car)
@@ -94,6 +109,8 @@ function AdminMain() {
 			[name]: value,
 		}))
 	}
+
+
 
 	return (
 		<>

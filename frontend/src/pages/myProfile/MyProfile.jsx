@@ -1,10 +1,14 @@
 import './MyProfile.css'
 import Heading from '../../component/heading/Heading'
 import ItemBlock from '../../component/itemBlock/ItemBlock'
-import Profile from '../../component/profile/Profile'
+// import Profile from '../../component/profile/Profile'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import DontHaveCar from '../../assets/svg/DontHaveCar'
+import avatarProfiveIcon from '../../assets/image/avatarProfiveIcon.png'
+import styles from './Profile.module.scss'
+import EditBtn from '../../assets/svg/EditBtn'
+import SoldBtn from '../../assets/svg/SoldBtn'
 
 function MyProfile() {
 	const user = localStorage.getItem('user-info')
@@ -61,10 +65,34 @@ const LoadingSpinner = () => (
 
 	return (
 		<>
-			<Profile />
-			{loading ? ( 
+			<div className={styles.root}>
+				<div className={styles.avatarAcc}>
+					<img src={avatarProfiveIcon} alt='avatar' />
+					<button>Додати фото</button>
+				</div>
+				<div className={styles.infoUser}>
+					<p>Ім'я: {infoUser.name}</p>
+					<p>Пошта: {infoUser.email}</p>
+					<p>Номер Телефону: {infoUser.number}</p>
+				</div>
+				<div className={styles.soldInfo}>
+					<p>Виставлені цим продавцем</p>
+					<p>Продано</p>
+				</div>
+				<div className={styles.btn}>
+					<button>
+						{' '}
+						<EditBtn />
+						Редагувати
+					</button>
+					<button>
+						<SoldBtn /> Продано
+					</button>
+				</div>
+			</div>
+			{loading ? (
 				<div className='loadingContainer'>
-					<LoadingSpinner /> 
+					<LoadingSpinner />
 				</div>
 			) : (
 				<>

@@ -35,3 +35,5 @@ Route::get('/car/{id}', [AddCarController::class, 'getCarById']);
 Route::get('/test', [AddCarController::class, 'test']);
 Route::put('/cars/{id}', [AddCarController::class, 'update']);
 Route::put('/cars/{id}/with-notification', [AddCarController::class, 'updateWithNotification']);
+
+

@@ -37,7 +37,53 @@ class AddCarController extends Controller
         $test->photo_paths = $req->file('photo_paths')->store('products', 'public');
         $test->save();
         return $test;
+        
   }
+
+// public function testAdd(Request $request)
+// {
+//     // Створюємо новий запис тестової машини
+//     $test = new Test;
+//     $test->type_of_transport = $request->input('type_of_transport');
+//     $test->brand = $request->input('brand');
+//     $test->model = $request->input('model');
+//     $test->year = $request->input('year');
+//     $test->runs = $request->input('runs');
+//     $test->body_type = $request->input('body_type');
+//     $test->region = $request->input('region');
+//     $test->city = $request->input('city');
+//     $test->vin_code = $request->input('vin_code');
+//     $test->verified_vin = $request->input('verified_vin');
+//     $test->number_of_owners = $request->input('number_of_owners');
+//     $test->phone_owner = $request->input('phone_owner');
+//     $test->description = $request->input('description');
+//     $test->gearbox = $request->input('gearbox');
+//     $test->fuel_type = $request->input('fuel_type');
+//     $test->fuel_consumption_city = $request->input('fuel_consumption_city');
+//     $test->fuel_consumption_highway = $request->input('fuel_consumption_highway');
+//     $test->fuel_consumption_combined = $request->input('fuel_consumption_combined');
+//     $test->engine_power = $request->input('engine_power');
+//     $test->number_of_doors = $request->input('number_of_doors');
+//     $test->color = $request->input('color');
+//     $test->price = $request->input('price');
+
+//     // Зберігаємо запис тестової машини
+//     $test->save();
+
+//     // Зберігаємо фотографії
+//     $photoPaths = [];
+//     foreach ($request->file('photo_paths') as $file) {
+//         $path = $file->store('products', 'public');
+//         $photoPaths[] = $path;
+//     }
+
+//     // Прив'язуємо фотографії до запису тестової машини
+//     $test->photo_paths = $photoPaths;
+//     $test->save();
+
+//     return $test;
+// }
+
   public function update(Request $req, $id)
 {
     $test = Test::find($id);
@@ -114,25 +160,75 @@ public function updateWithNotification(Request $req, $id)
     }
 
 
+// public function list(Request $request)
+// {
+//     $sortField = $request->get('sortField', 'price');
+//     $sortOrder = $request->get('sortOrder', 'asc');
+//     $minPrice = $request->get('minPrice', 0);
+//     $maxPrice = $request->get('maxPrice', PHP_INT_MAX);
+//     $verifiedVin = $request->get('verified_vin', null); 
+
+//     $query = AddCar::whereBetween('price', [$minPrice, $maxPrice]);
+
+//     if (!is_null($verifiedVin)) {
+//         $query->where('verified_vin', $verifiedVin);
+//     }
+
+//     if (in_array($sortField, ['type_of_transport', 'region', 'year', 'verified_vin', 'brand', 'model'])) {
+//         $query->orderBy($sortField, $sortOrder);
+//     }
+
+//     if ($sortField !== 'price') {
+//         $query->orderBy('price', $sortOrder);
+//     }
+
+//     $cars = $query->get();
+
+//     if ($cars->isEmpty()) {
+//         return response()->json(['error' => 'Car not found'], 404);
+//     }
+
+//     return response()->json($cars);
+// }
+
 public function list(Request $request)
 {
     $sortField = $request->get('sortField', 'price');
     $sortOrder = $request->get('sortOrder', 'asc');
     $minPrice = $request->get('minPrice', 0);
     $maxPrice = $request->get('maxPrice', PHP_INT_MAX);
-    $verifiedVin = $request->get('verified_vin', null); 
+    $verifiedVin = $request->get('verified_vin', null);
+    $type = $request->get('type', null);
+    $region = $request->get('region', null);
+    $brand = $request->get('brand', null);
+    $model = $request->get('model', null);
+    $yearFrom = $request->get('year_from', null);
+    $yearTo = $request->get('year_to', null);
 
     $query = AddCar::whereBetween('price', [$minPrice, $maxPrice]);
 
     if (!is_null($verifiedVin)) {
         $query->where('verified_vin', $verifiedVin);
     }
-
-    if (in_array($sortField, ['type_of_transport', 'region', 'year', 'verified_vin', 'brand', 'model'])) {
-        $query->orderBy($sortField, $sortOrder);
+    if (!is_null($type)) {
+        $query->where('type_of_transport', $type);
+    }
+    if (!is_null($region)) {
+        $query->where('region', $region);
+    }
+    if (!is_null($brand)) {
+        $query->where('brand', $brand);
+    }
+    if (!is_null($model)) {
+        $query->where('model', $model);
+    }
+    if (!is_null($yearFrom) && !is_null($yearTo)) {
+        $query->whereBetween('year', [$yearFrom, $yearTo]);
     }
 
-    if ($sortField !== 'price') {
+    if (in_array($sortField, ['type_of_transport', 'region', 'year', 'verified_vin', 'brand', 'model', 'price'])) {
+        $query->orderBy($sortField, $sortOrder);
+    } else {
         $query->orderBy('price', $sortOrder);
     }
 
